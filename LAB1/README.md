@@ -32,7 +32,6 @@ Lab 1.2: Bắt và phân tích gói tin Telnet – SSH bằng Wireshark (Examini
   * Phân tích bản chất kỹ thuật theo tam giác bảo mật CIA (Confidentiality, Integrity, Authentication).
   * Trình bày nguyên lý xác thực bằng Public-key Authentication và đề xuất các giải pháp Hardening cho SSH trong môi trường thực tế.
 
----
 
 ### ▪ Kết quả thực hiện
 
