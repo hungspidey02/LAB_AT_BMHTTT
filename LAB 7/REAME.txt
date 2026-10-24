@@ -1,0 +1,37 @@
+# LAB 7: XÂY DỰNG CHÍNH SÁCH WEB PROTECTION TRÊN PFSENSE + WEB PROXY
+
+- **Họ và tên:** Nguyễn Trường Hưng
+- **Mã số sinh viên:** 1150070013
+- **Môn học:** An toàn mạng / Bảo mật hệ thống
+
+---
+
+## 1. Mô hình triển khai
+Hệ thống kết hợp mô hình bảo mật nhiều lớp:
+1. **pfSense:** Đóng vai trò Stateful Firewall, cưỡng bức toàn bộ máy trạm phải định tuyến qua Proxy bằng cách chặn cổng 80/443 trực tiếp (Anti-Bypass).
+2. **WEB-PROXY (Squid + E2Guardian):** Lắng nghe tại `10.6.0.30:8080`, thực hiện lọc nội dung Web (L7), quét mã độc và kiểm soát lưu lượng.
+3. **DMZ-WEB (Kali Linux):** Chạy Nginx tại `172.16.6.10`, mô phỏng 13 domain `.lab7.test` và các kịch bản tải tệp.
+4. **DC01:** Phân giải DNS nội bộ cho zone `lab7.test`.
+5. **Windows 10 Client:** Máy trạm kiểm thử chính sách (`10.6.0.50`).
+
+---
+
+## 2. Bảng phân phối IP & Cổng dịch vụ
+
+| Máy ảo | Địa chỉ IP | Vai trò chính |
+| :--- | :--- | :--- |
+| **pfSense** | `10.6.0.1` / `172.16.6.1` / `192.168.136.254` | Gateway, DNS Relay, Firewall Rule Enforcement |
+| **DC01** | `10.6.0.10` | Active Directory Domain Services & DNS Server |
+| **WEB-PROXY** | `10.6.0.30` | E2Guardian (:8080) + Squid (:3128)[cite: 5] |
+| **DMZ-WEB** | `172.16.6.10` | Nginx HTTP Server (13 Website mô phỏng)[cite: 5] |
+| **Win 10 Client** | `10.6.0.50` | Máy trạm người dùng cuối kiểm thử[cite: 5] |
+
+---
+
+## 3. Các kịch bản kiểm thử (Scenarios)
+- **Kịch bản 1:** Chặn triệt để duyệt web trực tiếp khi người dùng tắt proxy (Chống Bypass)[cite: 5].
+- **Kịch bản 2:** Hard Block các tên miền cấm (`blockedgame.lab7.test`, giải trí)[cite: 5].
+- **Kịch bản 3:** Cho phép truy cập danh sách ngoại lệ Whitelist (`education.lab7.test`, `jobs.lab7.test`)[cite: 5].
+- **Kịch bản 4:** Giới hạn kích thước tệp tải xuống tối đa (`maxdownloadsize`)[cite: 5].
+- **Kịch bản 5:** Nhận diện và chặn tải mã độc qua tệp kiểm thử chuẩn EICAR kết hợp ClamAV[cite: 5].
+- **Kịch bản 6:** Giám sát và trích xuất nhật ký truy vết (`/var/log/e2guardian/access.log`)[cite: 5].
