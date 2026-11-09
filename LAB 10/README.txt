@@ -1,7 +1,5 @@
 # BÁO CÁO BÀI THỰC HÀNH TƯỜNG LỬA PFSENSE - LAB 10
 
----
-
 ## 1. THÔNG TIN SINH VIÊN & BÀI THỰC HÀNH
 * **Họ và tên:** Nguyễn Trường Hưng
 * **Mã số sinh viên (MSSV):** 1150070013
